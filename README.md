@@ -29,37 +29,37 @@ temporary invincibility after being hit.
 ## Timeline:
 
 Day 1: Monday, September 12th,
-  [ ] Project Skeleton
-  [ ] Developing player character art assets
-  [ ] HTML landing page
-  [ ] player character movement
-  [ ] player character animation
+  [ ]- Project Skeleton
+  [ ]- Developing player character art assets
+  [ ]- HTML landing page
+  [ ]- player character movement
+  [ ]- player character animation
 
 Day 2: Tuesday, September 13th,
-  [ ] Map components
-  [ ] Map art assets
-  [ ] Movement scrolling on map
-  [ ] Collisions - player character should not be able to go through certain tiles.
+  [ ]- Map components
+  [ ]- Map art assets
+  [ ]- Movement scrolling on map
+  [ ]- Collisions - player character should not be able to go through certain tiles.
 
 Day 3: Wednesday, September 14th,
-  [ ] Enemy components
-  [ ] Enemy art assets
-  [ ] Enemy movement - patterns, random, move toward character
-  [ ] Enemy animation
-  [ ] Enemy collisions
+  [ ]- Enemy components
+  [ ]- Enemy art assets
+  [ ]- Enemy movement - patterns, random, move toward character
+  [ ]- Enemy animation
+  [ ]- Enemy collisions
 
 Day 4: Thursday, September 15th,
-  [ ] Combat
-  [ ] Player life bar. Hurts on contact with enemy, eventual death.
-  [ ] Temporary invincibility
-  [ ] Sword attack hurts or kills enemy
-  [ ] Enemy thrown back by sword attack
+  [ ]- Combat
+  [ ]- Player life bar. Hurts on contact with enemy, eventual death.
+  [ ]- Temporary invincibility
+  [ ]- Sword attack hurts or kills enemy
+  [ ]- Enemy thrown back by sword attack
 
 Day 5: Friday, September 16th,
-  [ ] BONUS
-  [ ] Sounds
-  [ ] Music
-  [ ] Additional enemies
-  [ ] Additional levels / art assets
-  [ ] Rich storyline
-  [ ] SUPER BONUS: Procedurally generated levels
+  [ ]- BONUS
+  [ ]- Sounds
+  [ ]- Music
+  [ ]- Additional enemies
+  [ ]- Additional levels / art assets
+  [ ]- Rich storyline
+  [ ]- SUPER BONUS: Procedurally generated levels
