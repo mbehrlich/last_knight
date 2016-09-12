@@ -22,8 +22,8 @@ temporary invincibility after being hit.
 
 ## Wireframes
 
-1. [Basic overhead look](docs/wireframe1.jpg)
-2. [Basic combat look](docs/wireframe2.jpg)
+1. [Basic overhead look](./docs/wireframe1.jpg)
+2. [Basic combat look](./docs/wireframe2.jpg)
 
 
 ## Timeline:
