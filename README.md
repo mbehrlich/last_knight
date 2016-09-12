@@ -22,8 +22,8 @@ temporary invincibility after being hit.
 
 ## Wireframes
 
-1. [Basic overhead look](lastknight/docs/wireframe1.jpg)
-2. [Basic combat look](lastknight/docs/wireframe2.jpg)
+1. [Basic overhead look](docs/IMG_0285.JPG)
+2. [Basic combat look](docs/IMG_0286.JPG)
 
 
 ## Timeline:
