@@ -1,0 +1,46 @@
+html, body, h1, h3, p, canvas {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  text-decoration: inherit;
+  vertical-align: inherit;
+  box-sizing: inherit;
+  background: transparent;
+}
+
+body {
+  font-family: sans-serif;
+  background-image: url(/art/backgrounds/dots.png);
+  color: white;
+}
+
+.container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+canvas {
+  border: 1px solid gray;
+  box-sizing: border-box;
+}
+
+canvas img {
+  display: none;
+}
+
+h1 {
+  font-family: 'Cinzel', serif;
+  font-size: 44px;
+  margin: 20px;
+}
+
+
+p {
+  margin-top: 20px;
+}

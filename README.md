@@ -28,7 +28,7 @@ temporary invincibility after being hit.
 ## Timeline:
 
 Day 1: Monday, September 12th,
-  - [ ] Project Skeleton
+  - [x] Project Skeleton
   - [ ] Developing player character art assets
   - [ ] HTML landing page
   - [ ] player character movement
