@@ -14,7 +14,7 @@ html, body, h1, h3, p, canvas {
 
 body {
   font-family: sans-serif;
-  background-image: url(/art/backgrounds/dots.png);
+  background-image: url(../art/backgrounds/dots.png);
   color: white;
 }
 
