@@ -44,7 +44,11 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
+	
+	var _intro = __webpack_require__(7);
+	
+	var _intro2 = _interopRequireDefault(_intro);
 	
 	var _level_one = __webpack_require__(1);
 	
@@ -58,8 +62,31 @@
 	  draw.width = 512;
 	  draw.height = 512;
 	  draw.ctx = canvas.getContext("2d");
-	  var levelOne = new _level_one2.default(draw);
-	  levelOne.start();
+	  var intro = new _intro2.default(draw);
+	  var nextLevel = function nextLevel(draw) {
+	    var levelOne = new _level_one2.default(draw);
+	    levelOne.start();
+	  };
+	  intro.start(nextLevel);
+	
+	  var mute = document.getElementById('mute');
+	  var currentMute = false;
+	  mute.addEventListener("click", function () {
+	    var music = document.getElementById('firstblood');
+	    var sound1 = document.getElementById('sword');
+	    // let sound2 = document.getElementById('monster');
+	    if (currentMute) {
+	      music.muted = false;
+	      sound1.muted = false;
+	      // sound2.setAttribute("muted", "false");
+	      currentMute = false;
+	    } else {
+	      music.muted = true;
+	      sound1.muted = true;
+	      // sound2.setAttribute("muted", "false");
+	      currentMute = true;
+	    }
+	  });
 	});
 
 /***/ },
@@ -139,6 +166,7 @@
 	
 	    _classCallCheck(this, PC);
 	
+	    this.sound = document.getElementById('sword');
 	    this.draw = draw;
 	    this.game = game;
 	    this.sheet = document.getElementById("player");
@@ -153,6 +181,8 @@
 	      if (_this.key !== 32) {
 	        _this.key = e.keyCode;
 	        if (_this.key === 32) {
+	          _this.sound.currentTime = 0;
+	          _this.sound.play();
 	          _this.animx = 0;
 	        }
 	      }
@@ -587,6 +617,69 @@
 	}();
 	
 	exports.default = Game;
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var newLevel = void 0;
+	var newDraw = void 0;
+	var _startLevel = void 0;
+	var sound = void 0;
+	
+	var Intro = function () {
+	  function Intro(draw) {
+	    _classCallCheck(this, Intro);
+	
+	    this.draw = draw;
+	    newDraw = draw;
+	    _startLevel = this.startLevel;
+	  }
+	
+	  _createClass(Intro, [{
+	    key: "start",
+	    value: function start(nextLevel) {
+	      newLevel = nextLevel;
+	      sound = document.getElementById('firstblood');
+	      // sound.setAttribute("muted", "true");
+	      sound.play();
+	      this.draw.ctx.fillStyle = "black";
+	      this.draw.ctx.fillRect(0, 0, this.draw.width, this.draw.height);
+	      this.draw.ctx.stroke;
+	      this.draw.ctx.font = "44px 'Cinzel'";
+	      this.draw.ctx.fillStyle = "white";
+	      this.draw.ctx.fillText("The Last Knight", 110, 60);
+	      this.draw.ctx.font = "30px 'Cinzel'";
+	      this.draw.ctx.fillText("of the Last Kingdom", 130, 100);
+	      this.draw.ctx.fillText("Press Space", 190, 450);
+	      window.addEventListener('keydown', _startLevel);
+	    }
+	  }, {
+	    key: "startLevel",
+	    value: function startLevel(e) {
+	      e.preventDefault();
+	      if (e.keyCode === 32) {
+	        newLevel(newDraw);
+	        sound.pause();
+	        window.removeEventListener('keydown', _startLevel);
+	      }
+	    }
+	  }]);
+	
+	  return Intro;
+	}();
+	
+	exports.default = Intro;
 
 /***/ }
 /******/ ]);

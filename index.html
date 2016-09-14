@@ -10,12 +10,16 @@
   <body>
     <div class="container">
       <h1>The Last Knight</h1>
+      <audio src="/sounds/firstblood.mp3" id="firstblood" preload="auto" loop="true"></audio>
+      <audio src="/sounds/sword2.mp3" id="sword" preload="auto"></audio>
+      <div id="mute">Sound on/off</div>
 
       <canvas id="canvas" width="512" height="512">
         <img src="./art/sprites/main.png" id="player" />
         <img src="./art/tiles/1.png" id="water" />
         <img src="./art/tiles/9.png" id="bridge" />
         <img src="./art/tiles/11.png" id="forest" />
+
       </canvas>
       <p>Instructions: Use arrow keys to move. Press space to use sword.</p>
       <p>

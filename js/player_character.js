@@ -1,5 +1,6 @@
 class PC {
   constructor(draw, game) {
+    this.sound = document.getElementById('sword');
     this.draw = draw;
     this.game = game;
     this.sheet = document.getElementById("player");
@@ -14,6 +15,8 @@ class PC {
       if (this.key !== 32) {
         this.key = e.keyCode;
         if (this.key === 32) {
+          this.sound.currentTime = 0;
+          this.sound.play();
           this.animx = 0;
         }
       }

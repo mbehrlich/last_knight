@@ -25,6 +25,33 @@ body {
   text-align: center;
 }
 
+audio {
+  display: none;
+}
+
+#mute {
+  color: black;
+  padding: 5px;
+  background-color: lightGray;
+  border: 1px solid darkGray;
+  border-radius: 5px;
+  box-sizing: border-box;
+  display: block;
+  width: 70px;
+  margin: 10px auto;
+}
+
+#mute:hover {
+  background-color: gray;
+  border: 2px solid darkGray;
+  padding: 4px;
+  cursor: pointer;
+}
+
+#mute:active {
+  background-color: darkGray;
+}
+
 canvas {
   border: 1px solid gray;
   box-sizing: border-box;
