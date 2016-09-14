@@ -35,23 +35,19 @@ class GameObject {
     } else if (this.type === "tree-northeast") {
       this.sheet = document.getElementById('forest');
       this.animx = 4;
-      this.animy = 5;
+      this.animy = 3;
     } else if (this.type === "tree-northwest") {
       this.sheet = document.getElementById('forest');
       this.animx = 2;
-      this.animy = 5;
+      this.animy = 3;
     } else if (this.type === "tree-southeast") {
       this.sheet = document.getElementById('forest');
       this.animx = 4;
-      this.animy = 4;
+      this.animy = 5;
     } else if (this.type === "tree-southwest") {
       this.sheet = document.getElementById('forest');
       this.animx = 2;
-      this.animy = 4;
-    } else if (this.type === "tree-middle") {
-      this.sheet = document.getElementById('forest');
-      this.animx = 2;
-      this.animy = 4;
+      this.animy = 5;
     } else if (this.type === "tree-middle") {
       this.sheet = document.getElementById('forest');
       this.animx = 3;

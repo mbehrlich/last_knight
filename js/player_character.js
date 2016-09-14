@@ -28,7 +28,7 @@ class PC {
 
   checkObstacle(x, y) {
     for (var i = 0; i < this.game.obstacles.length; i++) {
-      if (x > this.game.obstacles[i][0] * 32 - 1 && x < this.game.obstacles[i][0] * 32 + 32 && y > this.game.obstacles[i][1] * 32 - 17 && y < this.game.obstacles[i][1] * 32 + 16) {
+      if (x > this.game.obstacles[i][0] * 32 - 3 && x < this.game.obstacles[i][0] * 32 + 35 && y > this.game.obstacles[i][1] * 32 - 26 && y < this.game.obstacles[i][1] * 32 + 16) {
         return false;
       }
     }

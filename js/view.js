@@ -24,16 +24,63 @@ class View {
       this.tiles.push(new GameObject(0, i, "tree-east", this.draw, this.game));
       this.tiles.push(new GameObject(63, i, "tree-west", this.draw, this.game));
     }
-    this.tiles.push(new GameObject(34, 35, "water-northwest", this.draw, this.game));
-    this.tiles.push(new GameObject(35, 35, "water-north", this.draw, this.game));
-    this.tiles.push(new GameObject(36, 35, "water-northeast", this.draw, this.game));
-    this.tiles.push(new GameObject(34, 36, "water-west", this.draw, this.game));
-    this.tiles.push(new GameObject(35, 36, "water-middle", this.draw, this.game));
-    this.tiles.push(new GameObject(36, 36, "water-east", this.draw, this.game));
-    this.tiles.push(new GameObject(34, 37, "water-southwest", this.draw, this.game));
-    this.tiles.push(new GameObject(35, 37, "water-south", this.draw, this.game));
-    this.tiles.push(new GameObject(36, 37, "water-southeast", this.draw, this.game));
 
+    for (var i = 0; i < 75; i++) {
+      let i = Math.floor(Math.random() * 64);
+      let j = Math.floor(Math.random() * 64);
+      let open = true;
+      this.game.obstacles.forEach((spot) => {
+        if (spot[0] >= i - 1 && spot[0] <= i + 4 && spot[1] >= j - 1 && spot[1] <= j + 4) {
+          open = false;
+        }
+      });
+      if (32 >= i - 2 && 32 <= i + 5 && 32 >= j - 2 && 32 <= j + 5) {
+        open = false;
+      }
+      if (open) {
+        this.placeTree(i, j);
+      }
+    }
+    for (var i = 0; i < 25; i++) {
+      let i = Math.floor(Math.random() * 64);
+      let j = Math.floor(Math.random() * 64);
+      let open = true;
+      this.game.obstacles.forEach((spot) => {
+        if (spot[0] >= i - 1 && spot[0] <= i + 4 && spot[1] >= j - 1 && spot[1] <= j + 4) {
+          open = false;
+        }
+      });
+      if (32 >= i - 2 && 32 <= i + 5 && 32 >= j - 2 && 32 <= j + 5) {
+        open = false;
+      }
+      if (open) {
+        this.placeLake(i, j);
+      }
+    }
+  }
+
+  placeLake(i, j) {
+    this.tiles.push(new GameObject(i, j, "water-northwest", this.draw, this.game));
+    this.tiles.push(new GameObject(i+1, j, "water-north", this.draw, this.game));
+    this.tiles.push(new GameObject(i+2, j, "water-northeast", this.draw, this.game));
+    this.tiles.push(new GameObject(i, j+1, "water-west", this.draw, this.game));
+    this.tiles.push(new GameObject(i+1, j+1, "water-middle", this.draw, this.game));
+    this.tiles.push(new GameObject(i+2, j+1, "water-east", this.draw, this.game));
+    this.tiles.push(new GameObject(i, j+2, "water-southwest", this.draw, this.game));
+    this.tiles.push(new GameObject(i+1, j+2, "water-south", this.draw, this.game));
+    this.tiles.push(new GameObject(i+2, j+2, "water-southeast", this.draw, this.game));
+  }
+
+  placeTree(i, j) {
+    this.tiles.push(new GameObject(i, j, "tree-northwest", this.draw, this.game));
+    this.tiles.push(new GameObject(i+1, j, "tree-north", this.draw, this.game));
+    this.tiles.push(new GameObject(i+2, j, "tree-northeast", this.draw, this.game));
+    this.tiles.push(new GameObject(i, j+1, "tree-west", this.draw, this.game));
+    this.tiles.push(new GameObject(i+1, j+1, "tree-middle", this.draw, this.game));
+    this.tiles.push(new GameObject(i+2, j+1, "tree-east", this.draw, this.game));
+    this.tiles.push(new GameObject(i, j+2, "tree-southwest", this.draw, this.game));
+    this.tiles.push(new GameObject(i+1, j+2, "tree-south", this.draw, this.game));
+    this.tiles.push(new GameObject(i+2, j+2, "tree-southeast", this.draw, this.game));
   }
 
   display(posx, posy) {

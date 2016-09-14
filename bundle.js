@@ -169,7 +169,7 @@
 	    key: "checkObstacle",
 	    value: function checkObstacle(x, y) {
 	      for (var i = 0; i < this.game.obstacles.length; i++) {
-	        if (x > this.game.obstacles[i][0] * 32 - 1 && x < this.game.obstacles[i][0] * 32 + 32 && y > this.game.obstacles[i][1] * 32 - 17 && y < this.game.obstacles[i][1] * 32 + 16) {
+	        if (x > this.game.obstacles[i][0] * 32 - 3 && x < this.game.obstacles[i][0] * 32 + 35 && y > this.game.obstacles[i][1] * 32 - 26 && y < this.game.obstacles[i][1] * 32 + 16) {
 	          return false;
 	        }
 	      }
@@ -278,6 +278,8 @@
 	  _createClass(View, [{
 	    key: 'generate',
 	    value: function generate() {
+	      var _this = this;
+	
 	      this.tiles = [];
 	      for (var i = 0; i < 64; i++) {
 	        for (var j = 0; j < 64; j++) {
@@ -292,15 +294,74 @@
 	        this.tiles.push(new _object2.default(0, i, "tree-east", this.draw, this.game));
 	        this.tiles.push(new _object2.default(63, i, "tree-west", this.draw, this.game));
 	      }
-	      this.tiles.push(new _object2.default(34, 35, "water-northwest", this.draw, this.game));
-	      this.tiles.push(new _object2.default(35, 35, "water-north", this.draw, this.game));
-	      this.tiles.push(new _object2.default(36, 35, "water-northeast", this.draw, this.game));
-	      this.tiles.push(new _object2.default(34, 36, "water-west", this.draw, this.game));
-	      this.tiles.push(new _object2.default(35, 36, "water-middle", this.draw, this.game));
-	      this.tiles.push(new _object2.default(36, 36, "water-east", this.draw, this.game));
-	      this.tiles.push(new _object2.default(34, 37, "water-southwest", this.draw, this.game));
-	      this.tiles.push(new _object2.default(35, 37, "water-south", this.draw, this.game));
-	      this.tiles.push(new _object2.default(36, 37, "water-southeast", this.draw, this.game));
+	
+	      var _loop = function _loop() {
+	        var i = Math.floor(Math.random() * 64);
+	        var j = Math.floor(Math.random() * 64);
+	        var open = true;
+	        _this.game.obstacles.forEach(function (spot) {
+	          if (spot[0] >= i - 1 && spot[0] <= i + 4 && spot[1] >= j - 1 && spot[1] <= j + 4) {
+	            open = false;
+	          }
+	        });
+	        if (32 >= i - 2 && 32 <= i + 5 && 32 >= j - 2 && 32 <= j + 5) {
+	          open = false;
+	        }
+	        if (open) {
+	          _this.placeTree(i, j);
+	        }
+	      };
+	
+	      for (var i = 0; i < 75; i++) {
+	        _loop();
+	      }
+	
+	      var _loop2 = function _loop2() {
+	        var i = Math.floor(Math.random() * 64);
+	        var j = Math.floor(Math.random() * 64);
+	        var open = true;
+	        _this.game.obstacles.forEach(function (spot) {
+	          if (spot[0] >= i - 1 && spot[0] <= i + 4 && spot[1] >= j - 1 && spot[1] <= j + 4) {
+	            open = false;
+	          }
+	        });
+	        if (32 >= i - 2 && 32 <= i + 5 && 32 >= j - 2 && 32 <= j + 5) {
+	          open = false;
+	        }
+	        if (open) {
+	          _this.placeLake(i, j);
+	        }
+	      };
+	
+	      for (var i = 0; i < 25; i++) {
+	        _loop2();
+	      }
+	    }
+	  }, {
+	    key: 'placeLake',
+	    value: function placeLake(i, j) {
+	      this.tiles.push(new _object2.default(i, j, "water-northwest", this.draw, this.game));
+	      this.tiles.push(new _object2.default(i + 1, j, "water-north", this.draw, this.game));
+	      this.tiles.push(new _object2.default(i + 2, j, "water-northeast", this.draw, this.game));
+	      this.tiles.push(new _object2.default(i, j + 1, "water-west", this.draw, this.game));
+	      this.tiles.push(new _object2.default(i + 1, j + 1, "water-middle", this.draw, this.game));
+	      this.tiles.push(new _object2.default(i + 2, j + 1, "water-east", this.draw, this.game));
+	      this.tiles.push(new _object2.default(i, j + 2, "water-southwest", this.draw, this.game));
+	      this.tiles.push(new _object2.default(i + 1, j + 2, "water-south", this.draw, this.game));
+	      this.tiles.push(new _object2.default(i + 2, j + 2, "water-southeast", this.draw, this.game));
+	    }
+	  }, {
+	    key: 'placeTree',
+	    value: function placeTree(i, j) {
+	      this.tiles.push(new _object2.default(i, j, "tree-northwest", this.draw, this.game));
+	      this.tiles.push(new _object2.default(i + 1, j, "tree-north", this.draw, this.game));
+	      this.tiles.push(new _object2.default(i + 2, j, "tree-northeast", this.draw, this.game));
+	      this.tiles.push(new _object2.default(i, j + 1, "tree-west", this.draw, this.game));
+	      this.tiles.push(new _object2.default(i + 1, j + 1, "tree-middle", this.draw, this.game));
+	      this.tiles.push(new _object2.default(i + 2, j + 1, "tree-east", this.draw, this.game));
+	      this.tiles.push(new _object2.default(i, j + 2, "tree-southwest", this.draw, this.game));
+	      this.tiles.push(new _object2.default(i + 1, j + 2, "tree-south", this.draw, this.game));
+	      this.tiles.push(new _object2.default(i + 2, j + 2, "tree-southeast", this.draw, this.game));
 	    }
 	  }, {
 	    key: 'display',
@@ -425,23 +486,19 @@
 	      } else if (this.type === "tree-northeast") {
 	        this.sheet = document.getElementById('forest');
 	        this.animx = 4;
-	        this.animy = 5;
+	        this.animy = 3;
 	      } else if (this.type === "tree-northwest") {
 	        this.sheet = document.getElementById('forest');
 	        this.animx = 2;
-	        this.animy = 5;
+	        this.animy = 3;
 	      } else if (this.type === "tree-southeast") {
 	        this.sheet = document.getElementById('forest');
 	        this.animx = 4;
-	        this.animy = 4;
+	        this.animy = 5;
 	      } else if (this.type === "tree-southwest") {
 	        this.sheet = document.getElementById('forest');
 	        this.animx = 2;
-	        this.animy = 4;
-	      } else if (this.type === "tree-middle") {
-	        this.sheet = document.getElementById('forest');
-	        this.animx = 2;
-	        this.animy = 4;
+	        this.animy = 5;
 	      } else if (this.type === "tree-middle") {
 	        this.sheet = document.getElementById('forest');
 	        this.animx = 3;
