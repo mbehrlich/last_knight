@@ -125,6 +125,7 @@
 	    this.level = true;
 	    this.game = new _game2.default();
 	    this.player = new _player_character2.default(this.draw, this.game);
+	    this.game.addPlayer(this.player);
 	    this.view = new _view2.default(this.draw, this.game);
 	  }
 	
@@ -148,15 +149,21 @@
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _health = __webpack_require__(9);
+	
+	var _health2 = _interopRequireDefault(_health);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -174,6 +181,9 @@
 	    this.animx = 0;
 	    this.animy = 10;
 	    this.key = false;
+	    this.invincible = 0;
+	    this.health = 3;
+	    this.healthBar = new _health2.default(this.draw);
 	    this.posx = 32 * 32;
 	    this.posy = 32 * 32;
 	    window.addEventListener('keydown', function (e) {
@@ -183,87 +193,138 @@
 	        if (_this.key === 32) {
 	          _this.sound.currentTime = 0;
 	          _this.sound.play();
-	          _this.animx = 0;
+	          if (_this.health > 0) {
+	            _this.animx = 0;
+	          }
 	        }
 	      }
 	    });
 	    window.addEventListener('keyup', function (e) {
 	      if (_this.key === e.keyCode && _this.key !== 32) {
 	        _this.key = false;
-	        _this.animx = 0;
+	        if (_this.health > 0) {
+	          _this.animx = 0;
+	        }
 	      }
 	    });
 	  }
 	
 	  _createClass(PC, [{
-	    key: "checkObstacle",
+	    key: 'checkObstacle',
 	    value: function checkObstacle(x, y) {
 	      for (var i = 0; i < this.game.obstacles.length; i++) {
 	        if (x > this.game.obstacles[i][0] * 32 - 3 && x < this.game.obstacles[i][0] * 32 + 35 && y > this.game.obstacles[i][1] * 32 - 26 && y < this.game.obstacles[i][1] * 32 + 16) {
 	          return false;
 	        }
 	      }
+	      for (var i = 0; i < this.game.monsters.length; i++) {
+	        if (x > this.game.monsters[i].posx - 16 && x < this.game.monsters[i].posx + 16 && y > this.game.monsters[i].posy - 26 && y < this.game.monsters[i].posy + 16) {
+	          return false;
+	        }
+	      }
 	      return true;
 	    }
 	  }, {
-	    key: "display",
+	    key: 'checkAttack',
+	    value: function checkAttack() {
+	      if (this.invincible > 0) {
+	        this.invincible--;
+	      } else {
+	        for (var i = 0; i < this.game.monsters.length; i++) {
+	          if (this.posx > this.game.monsters[i].posx - 21 && this.posx < this.game.monsters[i].posx + 21 && this.posy > this.game.monsters[i].posy - 31 && this.posy < this.game.monsters[i].posy + 21) {
+	            this.health--;
+	            if (this.health < 1) {
+	              this.animx = 0;
+	              this.animy = 20;
+	            }
+	            this.invincible = 10;
+	            return;
+	          }
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'attack',
+	    value: function attack(x, y) {
+	      for (var i = 0; i < this.game.monsters.length; i++) {
+	        if (x > this.game.monsters[i].posx - 42 && x < this.game.monsters[i].posx + 42 && y > this.game.monsters[i].posy - 42 && y < this.game.monsters[i].posy + 42) {
+	          this.game.monsters[i].attacked();
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'display',
 	    value: function display() {
 	      var mult = 64;
-	      if (this.key && this.key === 37) {
-	        this.animy = 9;
-	        this.direction = "left";
-	        if (this.checkObstacle(this.posx - 5, this.posy)) {
-	          this.posx -= 5;
+	      if (this.health < 1) {
+	        this.draw.ctx.drawImage(this.sheet, mult * this.animx, mult * this.animy, mult, mult, this.draw.width / 2 - mult / 2, this.draw.height / 2 - mult / 2, mult, mult);
+	        if (this.animx < 5) {
+	          this.animx++;
 	        }
-	      } else if (this.key && this.key === 38) {
-	        this.animy = 8;
-	        this.direction = "up";
-	        if (this.checkObstacle(this.posx, this.posy - 5)) {
-	          this.posy -= 5;
-	        }
-	      } else if (this.key && this.key === 39) {
-	        this.animy = 11;
-	        this.direction = "right";
-	        if (this.checkObstacle(this.posx + 5, this.posy)) {
-	          this.posx += 5;
-	        }
-	      } else if (this.key && this.key == 40) {
-	        this.animy = 10;
-	        this.direction = "down";
-	        if (this.checkObstacle(this.posx, this.posy + 5)) {
-	          this.posy += 5;
-	        }
-	      } else if (this.key && this.key == 32) {
-	        this.animy = 21;
-	        if (this.direction === "left") {
-	          this.animy = 24;
-	        } else if (this.direction === "down") {
-	          this.animy = 27;
-	        } else if (this.direction === "right") {
-	          this.animy = 30;
-	        }
-	      }
-	      var animation = this.animx === 0 ? 0 : (this.animx - 1) % 6 + 1;
-	      if (this.key === 32) {
-	        this.draw.ctx.drawImage(this.sheet, mult * this.animx * 3, mult * this.animy, mult * 3, mult * 3, this.draw.width / 2 - mult * 1.5, this.draw.height / 2 - mult * 1.5, mult * 3, mult * 3);
 	      } else {
-	        this.draw.ctx.drawImage(this.sheet, mult * animation, mult * this.animy, mult, mult, this.draw.width / 2 - mult / 2, this.draw.height / 2 - mult / 2, mult, mult);
-	      }
-	      if (this.key === 32 && this.animx === 5) {
-	        this.key = false;
-	        this.animx = 0;
-	        if (this.direction === "left") {
+	        if (this.key && this.key === 37) {
 	          this.animy = 9;
-	        } else if (this.direction === "up") {
+	          this.direction = "left";
+	          if (this.checkObstacle(this.posx - 5, this.posy)) {
+	            this.posx -= 5;
+	          }
+	        } else if (this.key && this.key === 38) {
 	          this.animy = 8;
-	        } else if (this.direction === "right") {
+	          this.direction = "up";
+	          if (this.checkObstacle(this.posx, this.posy - 5)) {
+	            this.posy -= 5;
+	          }
+	        } else if (this.key && this.key === 39) {
 	          this.animy = 11;
-	        } else if (this.direction === "down") {
+	          this.direction = "right";
+	          if (this.checkObstacle(this.posx + 5, this.posy)) {
+	            this.posx += 5;
+	          }
+	        } else if (this.key && this.key == 40) {
 	          this.animy = 10;
+	          this.direction = "down";
+	          if (this.checkObstacle(this.posx, this.posy + 5)) {
+	            this.posy += 5;
+	          }
+	        } else if (this.key && this.key == 32) {
+	          if (this.direction === "up") {
+	            this.animy = 21;
+	            this.attack(this.posx, this.posy - 16);
+	          } else if (this.direction === "left") {
+	            this.animy = 24;
+	            this.attack(this.posx - 16, this.posy);
+	          } else if (this.direction === "down") {
+	            this.animy = 27;
+	            this.attack(this.posx, this.posy + 16);
+	          } else if (this.direction === "right") {
+	            this.animy = 30;
+	            this.attack(this.posx + 16, this.posy);
+	          }
 	        }
-	      } else if (this.key) {
-	        this.animx++;
+	        var animation = this.animx === 0 ? 0 : (this.animx - 1) % 6 + 1;
+	        this.checkAttack();
+	        if (this.key === 32) {
+	          this.draw.ctx.drawImage(this.sheet, mult * this.animx * 3, mult * this.animy, mult * 3, mult * 3, this.draw.width / 2 - mult * 1.5, this.draw.height / 2 - mult * 1.5, mult * 3, mult * 3);
+	        } else {
+	          this.draw.ctx.drawImage(this.sheet, mult * animation, mult * this.animy, mult, mult, this.draw.width / 2 - mult / 2, this.draw.height / 2 - mult / 2, mult, mult);
+	        }
+	        if (this.key === 32 && this.animx === 5) {
+	          this.key = false;
+	          this.animx = 0;
+	          if (this.direction === "left") {
+	            this.animy = 9;
+	          } else if (this.direction === "up") {
+	            this.animy = 8;
+	          } else if (this.direction === "right") {
+	            this.animy = 11;
+	          } else if (this.direction === "down") {
+	            this.animy = 10;
+	          }
+	        } else if (this.key) {
+	          this.animx++;
+	        }
 	      }
+	      this.healthBar.display(this.health);
 	    }
 	  }]);
 	
@@ -291,6 +352,14 @@
 	var _object = __webpack_require__(5);
 	
 	var _object2 = _interopRequireDefault(_object);
+	
+	var _monster = __webpack_require__(8);
+	
+	var _monster2 = _interopRequireDefault(_monster);
+	
+	var _monster_bar = __webpack_require__(10);
+	
+	var _monster_bar2 = _interopRequireDefault(_monster_bar);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -342,7 +411,7 @@
 	        }
 	      };
 	
-	      for (var i = 0; i < 75; i++) {
+	      for (var k = 0; k < 75; k++) {
 	        _loop();
 	      }
 	
@@ -363,9 +432,36 @@
 	        }
 	      };
 	
-	      for (var i = 0; i < 25; i++) {
+	      for (var k = 0; k < 25; k++) {
 	        _loop2();
 	      }
+	
+	      var _loop3 = function _loop3() {
+	        var i = Math.floor(Math.random() * 64);
+	        var j = Math.floor(Math.random() * 64);
+	        var open = true;
+	        _this.game.obstacles.forEach(function (spot) {
+	          if (spot[0] >= i - 1 && spot[0] <= i + 1 && spot[1] >= j - 1 && spot[1] <= j + 1) {
+	            open = false;
+	          }
+	        });
+	        _this.game.monsters.forEach(function (monster) {
+	          if (monster.posx >= i * 32 - 32 && monster.posx <= i * 32 + 32 && monster.posy >= j * 32 - 32 && monster.posy <= j * 32 + 32) {
+	            open = false;
+	          }
+	        });
+	        if (32 >= i - 7 && 32 <= i + 7 && 32 >= j - 7 && 32 <= j + 7) {
+	          open = false;
+	        }
+	        if (open) {
+	          _this.placeMonster(i, j);
+	        }
+	      };
+	
+	      for (var k = 0; k < 50; k++) {
+	        _loop3();
+	      }
+	      this.monsterBar = new _monster_bar2.default(this.draw);
 	    }
 	  }, {
 	    key: 'placeLake',
@@ -394,6 +490,11 @@
 	      this.tiles.push(new _object2.default(i + 2, j + 2, "tree-southeast", this.draw, this.game));
 	    }
 	  }, {
+	    key: 'placeMonster',
+	    value: function placeMonster(i, j) {
+	      new _monster2.default(this.draw, this.game, i, j);
+	    }
+	  }, {
 	    key: 'display',
 	    value: function display(posx, posy) {
 	
@@ -402,6 +503,13 @@
 	      this.tiles.forEach(function (tile) {
 	        return tile.display(posx, posy);
 	      });
+	      this.game.monsters.forEach(function (monster) {
+	        return monster.display();
+	      });
+	      this.game.dead.forEach(function (monster) {
+	        return monster.display();
+	      });
+	      this.monsterBar.display(this.game.monsters.length);
 	    }
 	  }]);
 	
@@ -604,12 +712,29 @@
 	    _classCallCheck(this, Game);
 	
 	    this.obstacles = [];
+	    this.monsters = [];
+	    this.dead = [];
 	  }
 	
 	  _createClass(Game, [{
 	    key: "addObstacle",
 	    value: function addObstacle(x, y) {
 	      this.obstacles.push([x, y]);
+	    }
+	  }, {
+	    key: "addMonster",
+	    value: function addMonster(monster) {
+	      this.monsters.push(monster);
+	    }
+	  }, {
+	    key: "addDead",
+	    value: function addDead(monster) {
+	      this.dead.push(monster);
+	    }
+	  }, {
+	    key: "addPlayer",
+	    value: function addPlayer(player) {
+	      this.player = player;
 	    }
 	  }]);
 	
@@ -655,7 +780,7 @@
 	      sound.play();
 	      this.draw.ctx.fillStyle = "black";
 	      this.draw.ctx.fillRect(0, 0, this.draw.width, this.draw.height);
-	      this.draw.ctx.stroke;
+	      // this.draw.ctx.stroke
 	      this.draw.ctx.font = "44px 'Cinzel'";
 	      this.draw.ctx.fillStyle = "white";
 	      this.draw.ctx.fillText("The Last Knight", 110, 60);
@@ -680,6 +805,213 @@
 	}();
 	
 	exports.default = Intro;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Monster = function () {
+	  function Monster(draw, game, posx, posy) {
+	    _classCallCheck(this, Monster);
+	
+	    // this.sound = document.getElementById('skeldeath');
+	    this.id = Math.floor(Math.random() * 1000000000);
+	    this.draw = draw;
+	    this.game = game;
+	    this.sheet = document.getElementById("skeleton");
+	    this.direction = "down";
+	    this.animx = 0;
+	    this.animy = 10;
+	    this.posx = posx * 32;
+	    this.posy = posy * 32;
+	    this.dead = false;
+	    this.game.addMonster(this);
+	  }
+	
+	  _createClass(Monster, [{
+	    key: "attacked",
+	    value: function attacked() {
+	      var _this = this;
+	
+	      this.dead = true;
+	      var remove = void 0;
+	      this.game.monsters.forEach(function (monster, idx) {
+	        if (_this.id === monster.id) {
+	          remove = idx;
+	        }
+	      });
+	      this.game.monsters = this.game.monsters.slice(0, remove).concat(this.game.monsters.slice(remove + 1));
+	      this.game.addDead(this);
+	      this.animx = 0;
+	    }
+	  }, {
+	    key: "checkObstacle",
+	    value: function checkObstacle(x, y) {
+	      for (var i = 0; i < this.game.obstacles.length; i++) {
+	        if (x > this.game.obstacles[i][0] * 32 - 3 && x < this.game.obstacles[i][0] * 32 + 35 && y > this.game.obstacles[i][1] * 32 - 26 && y < this.game.obstacles[i][1] * 32 + 16) {
+	          return false;
+	        }
+	      }
+	      for (var i = 0; i < this.game.monsters.length; i++) {
+	        if (this.id === this.game.monsters[i].id) {
+	          // do nothing
+	        } else if (x > this.game.monsters[i].posx - 16 && x < this.game.monsters[i].posx + 16 && y > this.game.monsters[i].posy - 26 && y < this.game.monsters[i].posy + 16) {
+	          return false;
+	        } else if (x > this.game.player.posx - 16 && x < this.game.player.posx + 16 && y > this.game.player.posy - 26 && y < this.game.player.posy + 16) {
+	          return false;
+	        }
+	      }
+	      return true;
+	    }
+	  }, {
+	    key: "display",
+	    value: function display() {
+	      var mult = 64;
+	      if (this.dead) {
+	        this.animy = 20;
+	        this.draw.ctx.drawImage(this.sheet, mult * this.animx, mult * this.animy, mult, mult, this.posx - 32 - this.game.player.posx + 8 * 32, this.posy - 32 - this.game.player.posy + 8 * 32, mult, mult);
+	        if (this.animx < 5) {
+	          this.animx++;
+	        }
+	      } else if (this.game.player.posx > this.posx - 9 * 32 && this.game.player.posx < this.posx + 9 * 32 && this.game.player.posy > this.posy - 9 * 32 && this.game.player.posy < this.posy + 9 * 32) {
+	        if (Math.abs(this.game.player.posx - this.posx) > Math.abs(this.game.player.posy - this.posy)) {
+	          if (this.game.player.posx - this.posx < 0) {
+	            this.animy = 9;
+	            this.direction = "left";
+	            if (this.checkObstacle(this.posx - 4, this.posy)) {
+	              this.posx -= 4;
+	            }
+	          } else {
+	            this.animy = 11;
+	            this.direction = "right";
+	            if (this.checkObstacle(this.posx + 4, this.posy)) {
+	              this.posx += 4;
+	            }
+	          }
+	        } else {
+	          if (this.game.player.posy - this.posy < 0) {
+	            this.animy = 8;
+	            this.direction = "up";
+	            if (this.checkObstacle(this.posx, this.posy - 4)) {
+	              this.posy -= 4;
+	            }
+	          } else {
+	            this.animy = 10;
+	            this.direction = "down";
+	            if (this.checkObstacle(this.posx, this.posy + 4)) {
+	              this.posy += 4;
+	            }
+	          }
+	        }
+	        var animation = this.animx === 0 ? 0 : (this.animx - 1) % 6 + 1;
+	        this.draw.ctx.drawImage(this.sheet, mult * animation, mult * this.animy, mult, mult, this.posx - 32 - this.game.player.posx + 8 * 32, this.posy - 32 - this.game.player.posy + 8 * 32, mult, mult);
+	        this.animx++;
+	      }
+	    }
+	  }]);
+	
+	  return Monster;
+	}();
+	
+	exports.default = Monster;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var HealthBar = function () {
+	  function HealthBar(draw) {
+	    _classCallCheck(this, HealthBar);
+	
+	    this.draw = draw;
+	  }
+	
+	  _createClass(HealthBar, [{
+	    key: "display",
+	    value: function display(health) {
+	      this.draw.ctx.beginPath();
+	      this.draw.ctx.fillStyle = "red";
+	      if (health < 1) {
+	        this.draw.ctx.fillStyle = "black";
+	      }
+	      this.draw.ctx.arc(30, 30, 10, 0, 2 * Math.PI);
+	      this.draw.ctx.fill();
+	      this.draw.ctx.beginPath();
+	      this.draw.ctx.fillStyle = "red";
+	      if (health < 2) {
+	        this.draw.ctx.fillStyle = "black";
+	      }
+	      this.draw.ctx.arc(70, 30, 10, 0, 2 * Math.PI);
+	      this.draw.ctx.fill();
+	      this.draw.ctx.beginPath();
+	      this.draw.ctx.fillStyle = "red";
+	      if (health < 3) {
+	        this.draw.ctx.fillStyle = "black";
+	      }
+	      this.draw.ctx.arc(110, 30, 10, 0, 2 * Math.PI);
+	      this.draw.ctx.fill();
+	    }
+	  }]);
+	
+	  return HealthBar;
+	}();
+	
+	exports.default = HealthBar;
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var MonsterBar = function () {
+	  function MonsterBar(draw) {
+	    _classCallCheck(this, MonsterBar);
+	
+	    this.draw = draw;
+	  }
+	
+	  _createClass(MonsterBar, [{
+	    key: "display",
+	    value: function display(monsters) {
+	      this.draw.ctx.font = "18px 'Cinzel'";
+	      this.draw.ctx.fillStyle = "black";
+	      this.draw.ctx.fillText(monsters + " monsters left", 250, 30);
+	    }
+	  }]);
+	
+	  return MonsterBar;
+	}();
+	
+	exports.default = MonsterBar;
 
 /***/ }
 /******/ ]);

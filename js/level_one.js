@@ -9,6 +9,7 @@ class LevelOne {
     this.level = true;
     this.game = new Game();
     this.player = new PC(this.draw, this.game);
+    this.game.addPlayer(this.player);
     this.view = new View(this.draw, this.game);
   }
 

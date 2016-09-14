@@ -1,5 +1,7 @@
 import Tile from './tile';
 import GameObject from './object';
+import Monster from './monster';
+import MonsterBar from './monster_bar';
 
 class View {
 
@@ -25,7 +27,7 @@ class View {
       this.tiles.push(new GameObject(63, i, "tree-west", this.draw, this.game));
     }
 
-    for (var i = 0; i < 75; i++) {
+    for (var k = 0; k < 75; k++) {
       let i = Math.floor(Math.random() * 64);
       let j = Math.floor(Math.random() * 64);
       let open = true;
@@ -41,7 +43,7 @@ class View {
         this.placeTree(i, j);
       }
     }
-    for (var i = 0; i < 25; i++) {
+    for (var k = 0; k < 25; k++) {
       let i = Math.floor(Math.random() * 64);
       let j = Math.floor(Math.random() * 64);
       let open = true;
@@ -57,6 +59,28 @@ class View {
         this.placeLake(i, j);
       }
     }
+    for (var k = 0; k < 50; k++) {
+      let i = Math.floor(Math.random() * 64);
+      let j = Math.floor(Math.random() * 64);
+      let open = true;
+      this.game.obstacles.forEach((spot) => {
+        if (spot[0] >= i - 1 && spot[0] <= i + 1 && spot[1] >= j - 1 && spot[1] <= j + 1) {
+          open = false;
+        }
+      });
+      this.game.monsters.forEach((monster) => {
+        if (monster.posx >= i * 32 - 32 && monster.posx <= i * 32 + 32 && monster.posy >= j * 32 - 32 && monster.posy <= j * 32 + 32) {
+          open = false;
+        }
+      });
+      if (32 >= i - 7 && 32 <= i + 7 && 32 >= j - 7 && 32 <= j + 7) {
+        open = false;
+      }
+      if (open) {
+        this.placeMonster(i, j);
+      }
+    }
+    this.monsterBar = new MonsterBar(this.draw);
   }
 
   placeLake(i, j) {
@@ -83,11 +107,18 @@ class View {
     this.tiles.push(new GameObject(i+2, j+2, "tree-southeast", this.draw, this.game));
   }
 
+  placeMonster(i, j) {
+    new Monster(this.draw, this.game, i, j);
+  }
+
   display(posx, posy) {
 
     this.draw.ctx.fillStyle = "#2E203C";
     this.draw.ctx.fillRect(0, 0, this.draw.width, this.draw.height);
     this.tiles.forEach((tile) => tile.display(posx, posy));
+    this.game.monsters.forEach((monster) => monster.display());
+    this.game.dead.forEach((monster) => monster.display());
+    this.monsterBar.display(this.game.monsters.length);
   }
 
 }

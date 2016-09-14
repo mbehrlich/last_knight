@@ -17,7 +17,7 @@ class Intro {
     sound.play();
     this.draw.ctx.fillStyle = "black";
     this.draw.ctx.fillRect(0, 0, this.draw.width, this.draw.height);
-    this.draw.ctx.stroke
+    // this.draw.ctx.stroke
     this.draw.ctx.font = "44px 'Cinzel'";
     this.draw.ctx.fillStyle = "white";
     this.draw.ctx.fillText("The Last Knight", 110,60);
