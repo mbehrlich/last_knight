@@ -6,7 +6,7 @@ This is a javascript game in the vein of the original Legend of Zelda.
 
 1. Vanilla Javascript - for game logic
 2. HTML5 Canvas - for visual components
-3. [Universal LPC Spritesheet Character Generator](http://gaurav.munjal.us/Universal-LPC-Spritesheet-Character-Generator/)
+3. [Universal LPC Spritesheet Character Generator](http://gaurav.munjal.us/Universal-LPC-Spritesheet-Character-Generator/) - for character art assets
 
 ## MVP Features:
 
