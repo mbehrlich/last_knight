@@ -4,6 +4,8 @@
 
 This is a javascript game in the vein of the original Legend of Zelda.
 
+Instructions: Use arrow keys to move, and space to use your sword.
+
 ## Technologies used
 
 1. Vanilla Javascript - for game logic
@@ -33,3 +35,28 @@ and then move towards the player.
 
 4) Combat - When enemies tough the player, the player has a short period of invincibility.
 Using the sword kills skeletons in a small area in front of the player.
+
+```
+if (this.direction === "up") {
+  this.animy = 21;
+  this.attack(this.posx, this.posy - 16);
+} else if (this.direction === "left") {
+  this.animy = 24;
+  this.attack(this.posx - 16, this.posy);
+} else if (this.direction === "down") {
+  this.animy = 27;
+  this.attack(this.posx, this.posy + 16);
+} else if (this.direction === "right") {
+  this.animy = 30;
+  this.attack(this.posx + 16, this.posy);
+}
+```
+
+To do:
+
+- More levels
+- More enemies
+- More weapons
+- More art
+- More storyline
+- More procedural generation
