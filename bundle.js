@@ -46,11 +46,11 @@
 
 	'use strict';
 	
-	var _intro = __webpack_require__(7);
+	var _intro = __webpack_require__(1);
 	
 	var _intro2 = _interopRequireDefault(_intro);
 	
-	var _level_one = __webpack_require__(1);
+	var _level_one = __webpack_require__(2);
 	
 	var _level_one2 = _interopRequireDefault(_level_one);
 	
@@ -91,6 +91,69 @@
 
 /***/ },
 /* 1 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var newLevel = void 0;
+	var newDraw = void 0;
+	var _startLevel = void 0;
+	var sound = void 0;
+	
+	var Intro = function () {
+	  function Intro(draw) {
+	    _classCallCheck(this, Intro);
+	
+	    this.draw = draw;
+	    newDraw = draw;
+	    _startLevel = this.startLevel;
+	  }
+	
+	  _createClass(Intro, [{
+	    key: "start",
+	    value: function start(nextLevel) {
+	      newLevel = nextLevel;
+	      sound = document.getElementById('firstblood');
+	      // sound.setAttribute("muted", "true");
+	      sound.play();
+	      this.draw.ctx.fillStyle = "black";
+	      this.draw.ctx.fillRect(0, 0, this.draw.width, this.draw.height);
+	      // this.draw.ctx.stroke
+	      this.draw.ctx.font = "44px 'Cinzel'";
+	      this.draw.ctx.fillStyle = "white";
+	      this.draw.ctx.fillText("The Last Knight", 110, 60);
+	      this.draw.ctx.font = "30px 'Cinzel'";
+	      this.draw.ctx.fillText("of the Last Kingdom", 130, 100);
+	      this.draw.ctx.fillText("Press Space", 190, 450);
+	      window.addEventListener('keydown', _startLevel);
+	    }
+	  }, {
+	    key: "startLevel",
+	    value: function startLevel(e) {
+	      e.preventDefault();
+	      if (e.keyCode === 32) {
+	        newLevel(newDraw);
+	        sound.pause();
+	        window.removeEventListener('keydown', _startLevel);
+	      }
+	    }
+	  }]);
+	
+	  return Intro;
+	}();
+	
+	exports.default = Intro;
+
+/***/ },
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -101,15 +164,15 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _player_character = __webpack_require__(2);
+	var _player_character = __webpack_require__(3);
 	
 	var _player_character2 = _interopRequireDefault(_player_character);
 	
-	var _view = __webpack_require__(3);
+	var _view = __webpack_require__(5);
 	
 	var _view2 = _interopRequireDefault(_view);
 	
-	var _game = __webpack_require__(6);
+	var _game = __webpack_require__(10);
 	
 	var _game2 = _interopRequireDefault(_game);
 	
@@ -123,6 +186,7 @@
 	
 	    this.draw = draw;
 	    this.level = true;
+	    this.gameOver = false;
 	    this.game = new _game2.default();
 	    this.player = new _player_character2.default(this.draw, this.game);
 	    this.game.addPlayer(this.player);
@@ -138,7 +202,38 @@
 	        _this.draw.ctx.clearRect(0, 0, _this.draw.width, _this.draw.height);
 	        _this.view.display(_this.player.posx, _this.player.posy);
 	        _this.player.display();
+	        if (_this.player.health < 1) {
+	          _this.restart("Game Over");
+	        } else if (_this.game.monsters.length == 0) {
+	          _this.restart("You win!");
+	        }
 	      }, 50);
+	    }
+	  }, {
+	    key: 'restart',
+	    value: function restart(msg) {
+	      var _this2 = this;
+	
+	      this.draw.ctx.font = "44px 'Cinzel'";
+	      this.draw.ctx.fillStyle = "white";
+	      this.draw.ctx.fillText(msg, 100, 110);
+	      this.draw.ctx.font = "36px 'Cinzel'";
+	      this.draw.ctx.fillText("Press Space", 100, 150);
+	      if (!this.gameOver) {
+	        this.gameOver = true;
+	        window.setTimeout(function () {
+	          window.addEventListener('keydown', function (e) {
+	            e.preventDefault();
+	            if (e.keyCode === 32 && _this2.gameOver == true) {
+	              _this2.gameOver = false;
+	              _this2.game = new _game2.default();
+	              _this2.player = new _player_character2.default(_this2.draw, _this2.game);
+	              _this2.game.addPlayer(_this2.player);
+	              _this2.view = new _view2.default(_this2.draw, _this2.game);
+	            }
+	          });
+	        }, 2000);
+	      }
 	    }
 	  }]);
 	
@@ -148,7 +243,7 @@
 	exports.default = LevelOne;
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -159,7 +254,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _health = __webpack_require__(9);
+	var _health = __webpack_require__(4);
 	
 	var _health2 = _interopRequireDefault(_health);
 	
@@ -231,7 +326,7 @@
 	        this.invincible--;
 	      } else {
 	        for (var i = 0; i < this.game.monsters.length; i++) {
-	          if (this.posx > this.game.monsters[i].posx - 21 && this.posx < this.game.monsters[i].posx + 21 && this.posy > this.game.monsters[i].posy - 31 && this.posy < this.game.monsters[i].posy + 21) {
+	          if (this.posx > this.game.monsters[i].posx - 26 && this.posx < this.game.monsters[i].posx + 26 && this.posy > this.game.monsters[i].posy - 36 && this.posy < this.game.monsters[i].posy + 26) {
 	            this.health--;
 	            if (this.health < 1) {
 	              this.animx = 0;
@@ -334,7 +429,60 @@
 	exports.default = PC;
 
 /***/ },
-/* 3 */
+/* 4 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var HealthBar = function () {
+	  function HealthBar(draw) {
+	    _classCallCheck(this, HealthBar);
+	
+	    this.draw = draw;
+	  }
+	
+	  _createClass(HealthBar, [{
+	    key: "display",
+	    value: function display(health) {
+	      this.draw.ctx.beginPath();
+	      this.draw.ctx.fillStyle = "red";
+	      if (health < 1) {
+	        this.draw.ctx.fillStyle = "black";
+	      }
+	      this.draw.ctx.arc(30, 30, 10, 0, 2 * Math.PI);
+	      this.draw.ctx.fill();
+	      this.draw.ctx.beginPath();
+	      this.draw.ctx.fillStyle = "red";
+	      if (health < 2) {
+	        this.draw.ctx.fillStyle = "black";
+	      }
+	      this.draw.ctx.arc(70, 30, 10, 0, 2 * Math.PI);
+	      this.draw.ctx.fill();
+	      this.draw.ctx.beginPath();
+	      this.draw.ctx.fillStyle = "red";
+	      if (health < 3) {
+	        this.draw.ctx.fillStyle = "black";
+	      }
+	      this.draw.ctx.arc(110, 30, 10, 0, 2 * Math.PI);
+	      this.draw.ctx.fill();
+	    }
+	  }]);
+	
+	  return HealthBar;
+	}();
+	
+	exports.default = HealthBar;
+
+/***/ },
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -345,11 +493,11 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _tile = __webpack_require__(4);
+	var _tile = __webpack_require__(6);
 	
 	var _tile2 = _interopRequireDefault(_tile);
 	
-	var _object = __webpack_require__(5);
+	var _object = __webpack_require__(7);
 	
 	var _object2 = _interopRequireDefault(_object);
 	
@@ -357,7 +505,7 @@
 	
 	var _monster2 = _interopRequireDefault(_monster);
 	
-	var _monster_bar = __webpack_require__(10);
+	var _monster_bar = __webpack_require__(9);
 	
 	var _monster_bar2 = _interopRequireDefault(_monster_bar);
 	
@@ -519,7 +667,7 @@
 	exports.default = View;
 
 /***/ },
-/* 4 */
+/* 6 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -570,7 +718,7 @@
 	exports.default = Tile;
 
 /***/ },
-/* 5 */
+/* 7 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -692,119 +840,6 @@
 	}();
 	
 	exports.default = GameObject;
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var Game = function () {
-	  function Game() {
-	    _classCallCheck(this, Game);
-	
-	    this.obstacles = [];
-	    this.monsters = [];
-	    this.dead = [];
-	  }
-	
-	  _createClass(Game, [{
-	    key: "addObstacle",
-	    value: function addObstacle(x, y) {
-	      this.obstacles.push([x, y]);
-	    }
-	  }, {
-	    key: "addMonster",
-	    value: function addMonster(monster) {
-	      this.monsters.push(monster);
-	    }
-	  }, {
-	    key: "addDead",
-	    value: function addDead(monster) {
-	      this.dead.push(monster);
-	    }
-	  }, {
-	    key: "addPlayer",
-	    value: function addPlayer(player) {
-	      this.player = player;
-	    }
-	  }]);
-	
-	  return Game;
-	}();
-	
-	exports.default = Game;
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var newLevel = void 0;
-	var newDraw = void 0;
-	var _startLevel = void 0;
-	var sound = void 0;
-	
-	var Intro = function () {
-	  function Intro(draw) {
-	    _classCallCheck(this, Intro);
-	
-	    this.draw = draw;
-	    newDraw = draw;
-	    _startLevel = this.startLevel;
-	  }
-	
-	  _createClass(Intro, [{
-	    key: "start",
-	    value: function start(nextLevel) {
-	      newLevel = nextLevel;
-	      sound = document.getElementById('firstblood');
-	      // sound.setAttribute("muted", "true");
-	      sound.play();
-	      this.draw.ctx.fillStyle = "black";
-	      this.draw.ctx.fillRect(0, 0, this.draw.width, this.draw.height);
-	      // this.draw.ctx.stroke
-	      this.draw.ctx.font = "44px 'Cinzel'";
-	      this.draw.ctx.fillStyle = "white";
-	      this.draw.ctx.fillText("The Last Knight", 110, 60);
-	      this.draw.ctx.font = "30px 'Cinzel'";
-	      this.draw.ctx.fillText("of the Last Kingdom", 130, 100);
-	      this.draw.ctx.fillText("Press Space", 190, 450);
-	      window.addEventListener('keydown', _startLevel);
-	    }
-	  }, {
-	    key: "startLevel",
-	    value: function startLevel(e) {
-	      e.preventDefault();
-	      if (e.keyCode === 32) {
-	        newLevel(newDraw);
-	        sound.pause();
-	        window.removeEventListener('keydown', _startLevel);
-	      }
-	    }
-	  }]);
-	
-	  return Intro;
-	}();
-	
-	exports.default = Intro;
 
 /***/ },
 /* 8 */
@@ -939,59 +974,6 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var HealthBar = function () {
-	  function HealthBar(draw) {
-	    _classCallCheck(this, HealthBar);
-	
-	    this.draw = draw;
-	  }
-	
-	  _createClass(HealthBar, [{
-	    key: "display",
-	    value: function display(health) {
-	      this.draw.ctx.beginPath();
-	      this.draw.ctx.fillStyle = "red";
-	      if (health < 1) {
-	        this.draw.ctx.fillStyle = "black";
-	      }
-	      this.draw.ctx.arc(30, 30, 10, 0, 2 * Math.PI);
-	      this.draw.ctx.fill();
-	      this.draw.ctx.beginPath();
-	      this.draw.ctx.fillStyle = "red";
-	      if (health < 2) {
-	        this.draw.ctx.fillStyle = "black";
-	      }
-	      this.draw.ctx.arc(70, 30, 10, 0, 2 * Math.PI);
-	      this.draw.ctx.fill();
-	      this.draw.ctx.beginPath();
-	      this.draw.ctx.fillStyle = "red";
-	      if (health < 3) {
-	        this.draw.ctx.fillStyle = "black";
-	      }
-	      this.draw.ctx.arc(110, 30, 10, 0, 2 * Math.PI);
-	      this.draw.ctx.fill();
-	    }
-	  }]);
-	
-	  return HealthBar;
-	}();
-	
-	exports.default = HealthBar;
-
-/***/ },
-/* 10 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
 	var MonsterBar = function () {
 	  function MonsterBar(draw) {
 	    _classCallCheck(this, MonsterBar);
@@ -1012,6 +994,56 @@
 	}();
 	
 	exports.default = MonsterBar;
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Game = function () {
+	  function Game() {
+	    _classCallCheck(this, Game);
+	
+	    this.obstacles = [];
+	    this.monsters = [];
+	    this.dead = [];
+	  }
+	
+	  _createClass(Game, [{
+	    key: "addObstacle",
+	    value: function addObstacle(x, y) {
+	      this.obstacles.push([x, y]);
+	    }
+	  }, {
+	    key: "addMonster",
+	    value: function addMonster(monster) {
+	      this.monsters.push(monster);
+	    }
+	  }, {
+	    key: "addDead",
+	    value: function addDead(monster) {
+	      this.dead.push(monster);
+	    }
+	  }, {
+	    key: "addPlayer",
+	    value: function addPlayer(player) {
+	      this.player = player;
+	    }
+	  }]);
+	
+	  return Game;
+	}();
+	
+	exports.default = Game;
 
 /***/ }
 /******/ ]);

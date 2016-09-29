@@ -20,7 +20,7 @@ class Intro {
     // this.draw.ctx.stroke
     this.draw.ctx.font = "44px 'Cinzel'";
     this.draw.ctx.fillStyle = "white";
-    this.draw.ctx.fillText("The Last Knight", 110,60);
+    this.draw.ctx.fillText("The Last Knight", 110, 60);
     this.draw.ctx.font = "30px 'Cinzel'";
     this.draw.ctx.fillText("of the Last Kingdom", 130, 100);
     this.draw.ctx.fillText("Press Space", 190, 450);

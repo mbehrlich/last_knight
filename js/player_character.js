@@ -57,7 +57,7 @@ class PC {
       this.invincible--;
     } else {
       for (var i = 0; i < this.game.monsters.length; i++) {
-        if (this.posx > this.game.monsters[i].posx - 21 && this.posx < this.game.monsters[i].posx + 21 && this.posy > this.game.monsters[i].posy - 31 && this.posy < this.game.monsters[i].posy + 21) {
+        if (this.posx > this.game.monsters[i].posx - 26 && this.posx < this.game.monsters[i].posx + 26 && this.posy > this.game.monsters[i].posy - 36 && this.posy < this.game.monsters[i].posy + 26) {
           this.health--;
           if (this.health < 1) {
             this.animx = 0;
@@ -77,6 +77,7 @@ class PC {
       }
     }
   }
+
 
   display() {
     let mult = 64
